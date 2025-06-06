@@ -4,13 +4,13 @@ Fixed spelling mistake
 
 Tried to add some clarification on showing walls to players when the GM wants to see it on the token layer
 
-Tried to make the function that detects one way doors a little more effecient to prevent it causing lag.
+Tried to make the function that detects one way doors a little more efficient to prevent it causing lag.
 
 Fixed issue with detecting visibility of a wall
 
 Added a setting to allow for the snap to grid to use mid points and not just the vertices
 
-Added setting to swap the wall direction on a double right click, or flip the wall itself while holdinging down the ctrl key and double right clicking the wall.
+Added setting to swap the wall direction on a double right click, or flip the wall itself while holding down the ctrl key and double right clicking the wall.
 
 Prevented door sounds when using the close all doors function
 

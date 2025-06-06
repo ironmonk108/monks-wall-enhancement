@@ -1,25 +1,20 @@
 #wall-ctrls {
+    opacity: 0;
+    transition: opacity 0.2s ease-in;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-left: 8px;
+    gap: 8px;
     position: absolute;
-    width:10px;
-    height:40px;
+    flex-wrap: nowrap;
 }
 
-#controls #wall-ctrls ol.control-tools {
-    top: 0px;
-    left: 0px;
-    width: 0px;
-    overflow: hidden;
-    transition: width 0.2s ease-in;
-    margin-left: 10px;
-    padding-left: 0px;
-    margin-top: 0px;
-}
-
-#wall-ctrls ol li {
+#wall-ctrls menu li {
     display: inline-block;
 }
 
-#controls li[data-tool="walltype"]:hover #wall-ctrls ol {
-    width: 40px;
+#scene-controls button[data-tool="walltype"]:hover #wall-ctrls {
     pointer-events: all;
+    opacity: 1;
 }

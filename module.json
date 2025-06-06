@@ -1,13 +1,13 @@
 {
   "title": "Monk's Wall Enhancement",
   "description": "Enhancements to the Wall Tool.  Drag points together, freehand draw a wall, plus more.",
-  "version": "12.02",
+  "version": "13.01",
   "authors": [
     {
       "name": "IronMonk",
-      "discord": "ironmonk88#4075",
+      "discord": "ironmonk108",
 	  "flags": {
-		  "github": "ironmonk88",
+		  "github": "ironmonk108",
 		  "patreon": "ironmonk",
 		  "ko-fi": "ironmonk88"
 	  }
@@ -39,17 +39,17 @@
     "css/monks-wall-enhancement.css"
   ],
   "url": "https://github.com/ironmonk88/monks-wall-enhancement",
-  "download": "https://github.com/ironmonk88/monks-wall-enhancement/archive/12.02.zip",
-  "manifest": "https://github.com/ironmonk88/monks-wall-enhancement/releases/latest/download/module.json",
-  "bugs": "https://github.com/ironmonk88/monks-wall-enhancement/issues",
+  "download": "https://github.com/ironmonk108/monks-wall-enhancement/archive/13.01.zip",
+  "manifest": "https://github.com/ironmonk108/monks-wall-enhancement/releases/latest/download/module.json",
+  "bugs": "https://github.com/ironmonk108/monks-wall-enhancement/issues",
   "id": "monks-wall-enhancement",
   "compatibility": {
-    "minimum": "12",
-    "verified": "12"
+    "minimum": "13",
+    "verified": "13"
   },
   "name": "monks-wall-enhancement",
-  "minimumCoreVersion": "12",
-  "compatibleCoreVersion": "12",
+  "minimumCoreVersion": "13",
+  "compatibleCoreVersion": "13",
   "flags": {
     "allowBugReporter": true
   }
