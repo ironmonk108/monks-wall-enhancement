@@ -1,3 +1,9 @@
+# Version 13.02
+
+Fixed wall pop out when multiple scenes are opened
+
+Potentially fixed the Adjust Walls message from repeatedly appearing
+
 # Version 13.01
 
 v13 compatibility

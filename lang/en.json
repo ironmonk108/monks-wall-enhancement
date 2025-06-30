@@ -31,6 +31,7 @@
 	"MonksWallEnhancement.JoinWallPoints": "Join Wall Points",
 	"MonksWallEnhancement.SnapToPoint": "Snap To Closest Wall Point",
 	"MonksWallEnhancement.ToggleWallsDisplay": "Toggle Walls Display",
+	"MonksWallEnhancement.AdjustWalls": "Adjust walls",
 
 	"MonksWallEnhancement.Save": "Save",
 	"MonksWallEnhancement.Cancel": "Cancel",

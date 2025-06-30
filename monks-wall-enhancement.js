@@ -761,7 +761,9 @@ export class MonksWallEnhancement {
         const textureChange = ["offsetX", "offsetY", "scaleX", "scaleY", "rotation"].map(k => `background.${k}`);
         if (scene.walls.size > 0 && ["width", "height", "padding", "grid.size", ...textureChange].some(k => k in delta)) {
             const confirm = await foundry.applications.api.DialogV2.confirm({
-                title: "Adjust walls",
+                window: {
+                    title: i18n("MonksWallEnhancement.AdjustWalls"),
+                },
                 content: `<p>Monk's Wall Enhancements has detected that changes to the scene would affect current walls and can attempt to reposition them correctly.</p><p>Would you like to do that?</p>`
             });
 
@@ -1411,7 +1413,7 @@ Hooks.on("renderSceneControls", (controls, html) => {
 
             wallBtn.toggleClass('active', MonksWallEnhancement.types.includes(wallControl.activeTool));
             
-            wallTypes.css({ top: pos.top, left: pos.left + wallBtn.outerWidth() });
+            wallTypes.css({ top: pos.top, left: pos.left + wallBtn.outerWidth(), zIndex: 999, background: "rgba(255, 255, 255, 0.5)" });
         } else {
             $('#wall-ctrls').remove();
         }
@@ -1455,8 +1457,11 @@ Hooks.on("getSceneContextOptions", (html, menu) => {
 });
 
 Hooks.on("preUpdateScene", (scene, data, options, userId) => {
-    if (game.user.isGM && (data.width || data.height || data.padding || data.background?.offsetX || data.background?.offsetY)) {
-        MonksWallEnhancement.sceneConfigUpdate(scene, data);
+    if (game.user.isGM) {
+        const delta = foundry.utils.flattenObject(foundry.utils.diffObject(scene, data));
+        if (delta.width || delta.height || delta.padding || delta.background?.offsetX || delta.background?.offsetY || delta.grid?.size) {
+            MonksWallEnhancement.sceneConfigUpdate(scene, data);
+        }
     }
 });
 
