@@ -33,7 +33,7 @@ export let patchFunc = (prop, func, type = "WRAPPER") => {
 }
 
 export class MonksWallEnhancement {
-    
+
     static init() {
         log("initializing");
 
@@ -358,7 +358,7 @@ export class MonksWallEnhancement {
             const pt = this.layer._getWallEndpointCoordinates(destination, { snap });
 
             if (clones.length === 1 && MonksWallEnhancement.dragpoints?.length > 0) {
-                
+
                 for (let dragpoint of MonksWallEnhancement.dragpoints) {
                     const p0 = dragpoint.fixed ? dragpoint.wall.coords.slice(2, 4) : dragpoint.wall.coords.slice(0, 2);
                     const coords = dragpoint.fixed ? pt.concat(p0) : p0.concat(pt);
@@ -405,7 +405,7 @@ export class MonksWallEnhancement {
 
             let result = await wrapped(...args);
             this._forceSnap = oldSnap;
-            
+
             return result;
         }
 
@@ -443,7 +443,7 @@ export class MonksWallEnhancement {
                     else if (data.door === CONST.WALL_DOOR_TYPES.DOOR) MonksWallEnhancement.wallColor =  0x6666EE;
                     else if (data.door === CONST.WALL_DOOR_TYPES.SECRET) MonksWallEnhancement.wallColor =  0xA612D4;
                     else MonksWallEnhancement.wallColor =  0xFFFFBB;
-                } 
+                }
             } else if (findwall.active)
                 MonksWallEnhancement.createLine(origin);    //Find wall from colour
             else
@@ -474,7 +474,7 @@ export class MonksWallEnhancement {
                         this.addChild(MonksWallEnhancement.gr);
                     }
                     //MonksWallEnhancement.gr.beginFill(0xff0000).drawCircle(origin.x, origin.y, 4).endFill();
-                    
+
                 } else {
                     //log(MonksWallEnhancement.freehandPts, destination);
                     let prevPt = MonksWallEnhancement.freehandPts[MonksWallEnhancement.freehandPts.length - 1];
@@ -621,7 +621,7 @@ export class MonksWallEnhancement {
                     await this.document.update({ c: this.coords.slice(0, 2).concat([point.x, point.y]) });
                     await cls.createDocuments([newwall], { parent: canvas.scene });
                 }
-                else 
+                else
                     return wrapped(...args);
             } else
                 return wrapped(...args);
@@ -1054,7 +1054,7 @@ export class MonksWallEnhancement {
         let offsetY = canvas.scene.dimensions.shiftY - canvas.scene.dimensions.paddingY;
         pt.x = (parseInt(pt.x) + offsetX);
         pt.y = (parseInt(pt.y) + offsetY);
-        
+
         let pixelArray;
         let img = canvas.scene.img;
         if (img != undefined) {
@@ -1304,7 +1304,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     let wallTools = controls["walls"].tools;
     let order = wallTools["clone"].order + 0.01;
     if (game.settings.get('monks-wall-enhancement', 'show-drag-points-together')) {
-        wallTools["toggledragtogether"] = 
+        wallTools["toggledragtogether"] =
         {
             name: "toggledragtogether",
             title: i18n("MonksWallEnhancement.DragPointsTogether"),
@@ -1360,8 +1360,8 @@ Hooks.on("getSceneControlButtons", (controls) => {
         onClick: toggled => game.settings.set("monks-wall-enhancement", "wallsDisplayToggle", toggled),
         order: order += 0.01,
     };
-    
-        
+
+
     if (setting('condense-wall-type')) {
         wallTools["walltype"] = {
             name: "walltype",
@@ -1412,7 +1412,7 @@ Hooks.on("renderSceneControls", (controls, html) => {
             let wallControl = controls.controls["walls"];
 
             wallBtn.toggleClass('active', MonksWallEnhancement.types.includes(wallControl.activeTool));
-            
+
             wallTypes.css({ top: pos.top, left: pos.left + wallBtn.outerWidth(), zIndex: 999, background: "rgba(255, 255, 255, 0.5)" });
         } else {
             $('#wall-ctrls').remove();
@@ -1447,7 +1447,7 @@ Hooks.on("getSceneContextOptions", (html, menu) => {
     menu.push({
         name: "Close All Doors",
         icon: '<i class="fas fa-door-open"></i>',
-        condition: li => game.user.isGM && game.scenes.get(li.dataset.sceneId || li.dataset.entryId).active,
+        condition: li => game.user.isGM && game.scenes.get(li.dataset.sceneId || li.dataset.entryId)?.active,
         callback: li => {
             let scene = game.scenes.get(li.dataset.sceneId || li.dataset.entryId);
             if (scene)
