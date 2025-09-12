@@ -1447,7 +1447,7 @@ Hooks.on("getSceneContextOptions", (html, menu) => {
     menu.push({
         name: "Close All Doors",
         icon: '<i class="fas fa-door-open"></i>',
-        condition: li => game.user.isGM && game.scenes.get(li.dataset.sceneId || li.dataset.entryId).active,
+        condition: li => game.user.isGM && game.scenes.get(li.dataset.sceneId || li.dataset.entryId)?.active,
         callback: li => {
             let scene = game.scenes.get(li.dataset.sceneId || li.dataset.entryId);
             if (scene)
@@ -1513,5 +1513,6 @@ Hooks.on('renderWallConfig', async (app, html, options) => {
                     },
                     default: "save"
                 }).render(true);
+
             }));
 });
