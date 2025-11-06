@@ -1429,7 +1429,7 @@ Hooks.on("renderSceneControls", (controls, html) => {
 });
 
 Hooks.on('renderSceneConfig', async (app, html, options) => {
-    let tab = $('.tab[data-tab="basic"]', html);
+    let tab = $('.tab[data-tab="basics"]', html);
     tab.append($('<hr>'))
         .append($('<div>')
             .addClass("form-group")
