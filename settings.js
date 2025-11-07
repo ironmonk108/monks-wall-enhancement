@@ -59,6 +59,20 @@ export const registerSettings = function () {
         type: Number
     });
 
+    game.settings.register(modulename, "snap-tolerance", {
+        name: i18n("MonksWallEnhancement.snap-tolerance.name"),
+        hint: i18n("MonksWallEnhancement.snap-tolerance.hint"),
+        scope: "world",
+        config: true,
+        default: 10,
+        type: Number,
+        range: {
+            min: 1,
+            max: 40,
+            step: 1
+        }
+    });
+
     game.settings.register(modulename, "join-tolerance", {
         name: i18n("MonksWallEnhancement.join-tolerance.name"),
         hint: i18n("MonksWallEnhancement.join-tolerance.hint"),
@@ -98,7 +112,7 @@ export const registerSettings = function () {
         hint: i18n("MonksWallEnhancement.allow-one-way-doors.hint"),
         scope: "world",
         config: true,
-        default: true,
+        default: false,
         type: Boolean,
         requiresReload: true
     });
@@ -138,8 +152,5 @@ export const registerSettings = function () {
         config: false,
         default: false,
         type: Boolean,
-        onChange: value => {
-            
-        }
     });
 };

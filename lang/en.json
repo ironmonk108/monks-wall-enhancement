@@ -25,6 +25,8 @@
 	"MonksWallEnhancement.snap-to-midpoint.hint": "Snap to the mid-point of the grid and not just vertices",
 	"MonksWallEnhancement.swap-wall-direction.name": "Swap Wall Direction",
 	"MonksWallEnhancement.swap-wall-direction.hint": "Double right click to swap the direction of a wall",
+	"MonksWallEnhancement.snap-tolerance.name": "Snap Tolerance",
+	"MonksWallEnhancement.snap-tolerance.hint": "The minimum distance needed to snap a wall point to another wall point",
 
 	"MonksWallEnhancement.DragPointsTogether": "Drag points together",
 	"MonksWallEnhancement.FreehandDrawWall": "Freehand Draw Wall",

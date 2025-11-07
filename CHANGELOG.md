@@ -1,3 +1,27 @@
+# Version 13.03
+
+Adding snap tolerance for minimum distance to snap to a close grid point
+
+Fixing issue with moving a wall point and having it snap to a close grid point
+
+Fixing issue with snapping to a close grid point in Gridless
+
+Fixed deprecation warning for PointSourcePolygon
+
+Fixed deprecation warning For SceneControlTool onClick
+
+Fixed context menu for scenes in compendium
+
+Fixed issue with converting walls to the currently selected wall type
+
+Fixed issue with displaying the correct icon when switching back to the wall tools
+
+Fixed issue with editing a scene asking too often to adjust the walls in a scene
+
+Adding polish translation
+
+Adding Italian translation
+
 # Version 13.02
 
 Fixed wall pop out when multiple scenes are opened

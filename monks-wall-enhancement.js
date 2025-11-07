@@ -33,7 +33,6 @@ export let patchFunc = (prop, func, type = "WRAPPER") => {
 }
 
 export class MonksWallEnhancement {
-    
     static init() {
         log("initializing");
 
@@ -148,17 +147,18 @@ export class MonksWallEnhancement {
         }
 
         if (setting("allow-one-way-doors")) {
-
             patchFunc("foundry.canvas.geometry.ClockwiseSweepPolygon.prototype._testEdgeInclusion", function (wrapper, ...args) {
-                const wallDirectionMode = this.config?.wallDirectionMode;
-                let edge = args[0];
+                if (foundry.utils.getProperty(canvas.scene, "flags.monks-wall-enhancement.use-one-way-door", false)) {
+                    const wallDirectionMode = this.config?.wallDirectionMode;
+                    let edge = args[0];
 
-                const wdm = PointSourcePolygon.WALL_DIRECTION_MODES;
-                if (edge.direction && (wallDirectionMode !== wdm.BOTH) && edge.object?.isDoor) {
-                    const side = edge.orientPoint(this.origin);
-                    if (side) {
-                        if ((wallDirectionMode === wdm.NORMAL) === (side === edge.direction)) {
-                            return true;
+                    const wdm = foundry.canvas.geometry.PointSourcePolygon.WALL_DIRECTION_MODES;
+                    if (edge.direction && (wallDirectionMode !== wdm.BOTH) && edge.object?.isDoor) {
+                        const side = edge.orientPoint(this.origin);
+                        if (side) {
+                            if ((wallDirectionMode === wdm.NORMAL) === (side === edge.direction)) {
+                                return true;
+                            }
                         }
                     }
                 }
@@ -173,13 +173,15 @@ export class MonksWallEnhancement {
                     const w = this.wall;
                     if ((w.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM) return false;
 
-                    if (!game.user.isGM && w.document.dir) {
-                        // If all controlled tokens are on the wrong side of the door, then hide the door control
-                        if (!game.canvas.tokens.controlled.some((t) => {
-                            const side = w.edge.orientPoint({ x: t.x + ((t.shape?.width ?? 0) / 2), y: t.y + ((t.shape?.height ?? 0) / 2) });
-                            return side !== w.document.dir;
-                        })) {
-                            return false;
+                    if (foundry.utils.getProperty(canvas.scene, "flags.monks-wall-enhancement.use-one-way-door", false)) {
+                        if (!game.user.isGM && w.document.dir) {
+                            // If all controlled tokens are on the wrong side of the door, then hide the door control
+                            if (!game.canvas.tokens.controlled.some((t) => {
+                                const side = w.edge.orientPoint({ x: t.x + ((t.shape?.width ?? 0) / 2), y: t.y + ((t.shape?.height ?? 0) / 2) });
+                                return side !== w.document.dir;
+                            })) {
+                                return false;
+                            }
                         }
                     }
 
@@ -217,7 +219,7 @@ export class MonksWallEnhancement {
             patchFunc("foundry.canvas.placeables.Wall.prototype._onClickRight2", function (wrapper, ...args) {
                 let [event] = args;
                 let wall = this.document;
-                const wdm = PointSourcePolygon.WALL_DIRECTION_MODES;
+                const wdm = foundry.canvas.geometry.PointSourcePolygon.WALL_DIRECTION_MODES;
 
                 if (event.data.originalEvent.ctrlKey) {
                     wall.update({ c: [wall.c[2], wall.c[3], wall.c[0], wall.c[1]] });
@@ -229,14 +231,24 @@ export class MonksWallEnhancement {
             }, "MIXED");
         }
 
-        patchFunc("foundry.applications.ui.SceneControls.prototype.activate", function (wrapper, ...args) {
+        patchFunc("foundry.applications.ui.SceneControls.prototype.activate", async function (wrapper, ...args) {
             const [options] = args;
             if (options.control == 'walls') {
                 for (let tool of Object.values(this.controls.walls.tools)) {
                     tool.icon = MonksWallEnhancement.getIcon(tool);
                 }
+                let result = await wrapper.call(this, ...args);
+                let wallCtrl = ui.controls.controls.walls;
+                let removeIcons = new Set(Object.values(wallCtrl.tools).map(t => t.icon.split(' ')).flat());
+                $('#scene-controls button[data-tool="walltype"]')
+                    .removeClass([...removeIcons].join(' '))
+                    .addClass(ui.controls.controls.walls.tools[MonksWallEnhancement.tool.name].icon)
+                    .addClass('active');
+                return result;
             } else if (options.tool && setting('condense-wall-type') && ui.controls.control.name == "walls") {
                 if (MonksWallEnhancement.types.includes(options.tool)) {
+                    let { name, icon } = ui.controls.tools[options.tool];
+                    MonksWallEnhancement.tool = { name, icon };
                     let wallCtrl = ui.controls.controls.walls;
                     let removeIcons = new Set(Object.values(wallCtrl.tools).map(t => t.icon.split(' ')).flat());
                     $('#scene-controls button[data-tool="walltype"]')
@@ -245,7 +257,6 @@ export class MonksWallEnhancement {
                         .addClass('active');
                 }
             }
-
             return wrapper.call(this, ...args);
         }, "WRAPPER");
         /*
@@ -341,12 +352,12 @@ export class MonksWallEnhancement {
             const { clones, destination } = event.data.interactionData;
 
             const layer = this.layer;
-            const snap = layer._forceSnap || !originalEvent.shiftKey;
+            const snap = layer.gridPrecision == 0 ? false : !!layer._forceSnap || !originalEvent.shiftKey;
 
             let snaptowall = ui.controls.control.tools["snaptowall"];
             if (snaptowall.active && !snap) {
                 //find the closest point.
-                let closestPt = MonksWallEnhancement.findClosestPoint(null, destination.x, destination.y);
+                let closestPt = MonksWallEnhancement.findClosestPoint(this.id, destination.x, destination.y);
                 if (closestPt) {
                     destination.x = closestPt.x;
                     destination.y = closestPt.y;
@@ -391,7 +402,7 @@ export class MonksWallEnhancement {
             let event = args[0];
             const { origin } = event.data.interactionData;
 
-            let oldSnap = this._forceSnap;
+            let oldSnap = !!this._forceSnap;
             let snaptowall = ui.controls.control.tools["snaptowall"];
             if (snaptowall.active) {
                 //find the closest point.
@@ -506,7 +517,7 @@ export class MonksWallEnhancement {
             if (drawwall.active) {
                 let wallpoints = MonksWallEnhancement.simplify(MonksWallEnhancement.freehandPts, setting("simplify-distance"));
                 const cls = getDocumentClass(this.constructor.documentName);
-                const snap = this._forceSnap || !originalEvent.shiftKey;
+                const snap = !!this._forceSnap || !originalEvent.shiftKey;
                 let docs = [];
 
                 for (let i = 0; i < wallpoints.length - 1; i++) {
@@ -532,7 +543,7 @@ export class MonksWallEnhancement {
 
                 return this._onDragLeftCancel(event);
             } else {
-                let oldSnap = this._forceSnap;
+                let oldSnap = !!this._forceSnap;
                 let snaptowall = ui.controls.control.tools["snaptowall"];
                 if (snaptowall.active) {
                     //find the closest point.
@@ -812,7 +823,7 @@ export class MonksWallEnhancement {
             }
         });
 
-        return (closestDist < 10 ? closestPt : null);
+        return (closestDist < setting("snap-tolerance") ? closestPt : null);
     }
 
     static getIcon(tool) {
@@ -1330,7 +1341,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
         title: i18n("MonksWallEnhancement.JoinWallPoints"),
         icon: "fas fa-broom",
         button: true,
-        onClick: () => {
+        onChange: () => {
             MonksWallEnhancement.joinPoints();
         },
         order: order += 0.01,
@@ -1357,7 +1368,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
         icon: "fas fa-eye",
         toggle: true,
         active: setting("wallsDisplayToggle") && game.user.isGM,
-        onClick: toggled => game.settings.set("monks-wall-enhancement", "wallsDisplayToggle", toggled),
+        onChange: toggled => game.settings.set("monks-wall-enhancement", "wallsDisplayToggle", toggled),
         order: order += 0.01,
     };
     
@@ -1366,7 +1377,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
         wallTools["walltype"] = {
             name: "walltype",
             icon: MonksWallEnhancement.getIcon(MonksWallEnhancement.tool),
-            onClick: () => {
+            onChange: () => {
                 //click the button that should be clicked
                 let wallControl = ui.controls.controls['walls'];
                 wallControl.activeTool = MonksWallEnhancement.tool.name;
@@ -1389,7 +1400,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
             toggle: false,
             button: true,
             active: true,
-            onClick: MonksWallEnhancement.convertDrawings,
+            onChange: MonksWallEnhancement.convertDrawings,
             order: drawingTools["clear"].order + 0.01
         };
     }
@@ -1429,8 +1440,16 @@ Hooks.on("renderSceneControls", (controls, html) => {
 });
 
 Hooks.on('renderSceneConfig', async (app, html, options) => {
-    let tab = $('.tab[data-tab="basic"]', html);
-    tab.append($('<hr>'))
+    let tab = $('.tab[data-tab="basics"]', html);
+    if (setting("allow-one-way-doors")) {
+        tab.append($('<div>')
+            .addClass("form-group")
+            .append($('<label>').html("Use One Way Doors"))
+            .append($("<div>").addClass("form-fields")
+                .append($("<input>").attr("type", "checkbox").attr("name", "flags.monks-wall-enhancement.use-one-way-door").prop("checked", app.document.getFlag("monks-wall-enhancement", "use-one-way-door", false)))
+            ));
+    }
+    tab.append($('<hr>').css("margin", 0))
         .append($('<div>')
             .addClass("form-group")
             .append($('<label>').html("Wall updates"))
@@ -1447,7 +1466,7 @@ Hooks.on("getSceneContextOptions", (html, menu) => {
     menu.push({
         name: "Close All Doors",
         icon: '<i class="fas fa-door-open"></i>',
-        condition: li => game.user.isGM && game.scenes.get(li.dataset.sceneId || li.dataset.entryId).active,
+        condition: li => game.user.isGM && game.scenes.get(li.dataset.sceneId || li.dataset.entryId)?.active,
         callback: li => {
             let scene = game.scenes.get(li.dataset.sceneId || li.dataset.entryId);
             if (scene)
