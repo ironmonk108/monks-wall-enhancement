@@ -1,3 +1,7 @@
+# Version 13.04
+
+Fixing an issue where toggling the walls to always show wasn't able to toggle them off again
+
 # Version 13.03
 
 Adding snap tolerance for minimum distance to snap to a close grid point

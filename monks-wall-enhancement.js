@@ -1368,7 +1368,9 @@ Hooks.on("getSceneControlButtons", (controls) => {
         icon: "fas fa-eye",
         toggle: true,
         active: setting("wallsDisplayToggle") && game.user.isGM,
-        onChange: toggled => game.settings.set("monks-wall-enhancement", "wallsDisplayToggle", toggled),
+        onChange: (event, toggled) => {
+            game.settings.set("monks-wall-enhancement", "wallsDisplayToggle", toggled)
+        },
         order: order += 0.01,
     };
     
