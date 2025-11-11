@@ -25,6 +25,8 @@
 	"MonksWallEnhancement.snap-to-midpoint.hint": "Przyciąganie do punktu środkowego siatki, a nie tylko do wierzchołków",
 	"MonksWallEnhancement.swap-wall-direction.name": "Zamiana kierunku ściany",
 	"MonksWallEnhancement.swap-wall-direction.hint": "Kliknij dwukrotnie prawym przyciskiem myszy, aby zmienić kierunek ściany",
+	"MonksWallEnhancement.snap-tolerance.name": "Tolerancja przyciągania",
+	"MonksWallEnhancement.snap-tolerance.hint": "Minimalna odległość potrzebna do połączenia punktu ściany z innym punktem ściany",
 
 	"MonksWallEnhancement.DragPointsTogether": "Przeciąganie wspólnych punków",
 	"MonksWallEnhancement.FreehandDrawWall": "Odręczne rysowanie ścian",
