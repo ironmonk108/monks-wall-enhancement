@@ -14,7 +14,11 @@
     display: inline-block;
 }
 
-#scene-controls button[data-tool="walltype"]:hover #wall-ctrls {
+#wall-ctrls li .notification-pip{
+    display: none;
+}
+
+#scene-controls button[data-tool="wall"]:hover #wall-ctrls {
     pointer-events: all;
     opacity: 1;
 }
