@@ -25,7 +25,9 @@
 	"MonksWallEnhancement.snap-to-midpoint.hint": "Aggancia al punto medio della griglia e non solo ai vertici",
 	"MonksWallEnhancement.swap-wall-direction.name": "Inverti direzione muro",
 	"MonksWallEnhancement.swap-wall-direction.hint": "Doppio clic destro per invertire la direzione di un muro",
-
+	"MonksWallEnhancement.snap-tolerance.name": "Tolleranza Aggancio",
+	"MonksWallEnhancement.snap-tolerance.hint": "La distanza minima necessaria per agganciare un punto di muro a un altro punto di muro",
+	
 	"MonksWallEnhancement.DragPointsTogether": "Trascina punti insieme",
 	"MonksWallEnhancement.FreehandDrawWall": "Disegna muro a mano libera",
 	"MonksWallEnhancement.JoinWallPoints": "Unisci punti del muro",
